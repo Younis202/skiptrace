@@ -1,6 +1,6 @@
-# [Project name]
+# Skip Tracer Pro
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A real estate wholesaler automation tool that takes a CSV list of property addresses and automatically finds homeowner phone numbers via Cyber Background Checks.
 
 ## Run & Operate
 
@@ -19,18 +19,33 @@ _Replace the heading above with the project's name, and this line with one sente
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
 - Build: esbuild (CJS bundle)
+- Browser automation: Playwright (stealth mode, Chromium headless)
+- CSV: csv-parse, csv-stringify
+- File upload: multer (multipart/form-data)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — single source of truth for API contracts
+- `lib/db/src/schema/skipTrace.ts` — DB schema for jobs + results
+- `artifacts/api-server/src/routes/skipTrace.ts` — skip trace API route handlers
+- `artifacts/api-server/src/lib/skipTracer.ts` — Playwright-based scraping engine
+- `artifacts/skip-tracer/src/` — React frontend (dark mission-control theme)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- File uploads use multipart/form-data via multer; column mapping passed as query params (avoids Zod File/Blob codegen issues)
+- Skip tracing runs async in the background after job creation; frontend polls every 2s
+- Playwright uses stealth headers + navigator spoofing to avoid Cloudflare bot detection
+- Jobs stored in DB so progress survives server restarts
+- Results downloadable as enriched CSV
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Upload a CSV list of property addresses
+- Map columns (first name, last name, address, city, state)
+- Preview CSV before submitting
+- Watch real-time progress with live polling
+- Download enriched CSV with phone numbers found
 
 ## User preferences
 
@@ -38,7 +53,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Playwright Chromium must be installed: `npx playwright install chromium` in api-server
+- Upload endpoint uses query params for column mapping, NOT request body (avoids TS codegen collision with multipart File type)
+- After OpenAPI spec changes, always re-run codegen before typechecking
 
 ## Pointers
 

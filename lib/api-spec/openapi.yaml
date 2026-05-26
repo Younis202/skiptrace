@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: skip-trace
+    description: Skip tracing operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,148 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /skip-trace/upload:
+    post:
+      operationId: uploadSkipTraceList
+      tags: [skip-trace]
+      summary: Upload CSV list for skip tracing
+      description: Upload a CSV file with property addresses to skip trace. File is sent as multipart/form-data.
+      parameters:
+        - name: firstNameCol
+          in: query
+          schema:
+            type: string
+          description: Column name for first name
+        - name: lastNameCol
+          in: query
+          schema:
+            type: string
+          description: Column name for last name
+        - name: addressCol
+          in: query
+          schema:
+            type: string
+          description: Column name for address
+        - name: cityCol
+          in: query
+          schema:
+            type: string
+          description: Column name for city
+        - name: stateCol
+          in: query
+          schema:
+            type: string
+          description: Column name for state
+      responses:
+        "200":
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobCreated"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /skip-trace/jobs:
+    get:
+      operationId: listJobs
+      tags: [skip-trace]
+      summary: List all skip trace jobs
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Job"
+                required: [jobs]
+
+  /skip-trace/jobs/{jobId}:
+    get:
+      operationId: getJob
+      tags: [skip-trace]
+      summary: Get job status and progress
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobDetail"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /skip-trace/jobs/{jobId}/results:
+    get:
+      operationId: getJobResults
+      tags: [skip-trace]
+      summary: Download results as CSV
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: CSV file with results
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /skip-trace/jobs/{jobId}/cancel:
+    post:
+      operationId: cancelJob
+      tags: [skip-trace]
+      summary: Cancel a running job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobCreated"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +178,140 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    JobCreated:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+      required:
+        - jobId
+        - status
+
+    Job:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        totalRows:
+          type: integer
+        processedRows:
+          type: integer
+        foundCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        fileName:
+          type: string
+      required:
+        - jobId
+        - status
+        - totalRows
+        - processedRows
+        - foundCount
+        - createdAt
+        - updatedAt
+        - fileName
+
+    SkipTraceResult:
+      type: object
+      properties:
+        rowIndex:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        phones:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [found, not_found, error, pending, processing]
+        error:
+          type: string
+      required:
+        - rowIndex
+        - firstName
+        - lastName
+        - address
+        - status
+        - phones
+
+    JobDetail:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        totalRows:
+          type: integer
+        processedRows:
+          type: integer
+        foundCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        fileName:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkipTraceResult"
+        columnMap:
+          type: object
+          properties:
+            firstNameCol:
+              type: string
+            lastNameCol:
+              type: string
+            addressCol:
+              type: string
+            cityCol:
+              type: string
+            stateCol:
+              type: string
+          required:
+            - firstNameCol
+            - lastNameCol
+            - addressCol
+      required:
+        - jobId
+        - status
+        - totalRows
+        - processedRows
+        - foundCount
+        - createdAt
+        - updatedAt
+        - fileName
+        - results
+        - columnMap

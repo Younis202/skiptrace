@@ -1,0 +1,706 @@
+Intro
+0:00
+what's going on guys Sean back here with
+0:02
+everything Yuri I and today I'm gonna
+0:04
+show you guys my little experiment I've
+0:07
+been working on for the past couple of
+0:08
+weeks basically during shelter-in-place
+0:10
+we've had so much free time on our hands
+0:12
+that I decided to get back into my
+0:13
+engineering roots and to create some
+0:15
+code to make our lives as real-estate
+0:18
+investors a little bit easier so
+0:20
+basically the task at hand is to help
+0:22
+extract some phone numbers from a list
+0:24
+that I have basically if you guys are
+0:26
+trying to find more ways to get more
+0:28
+deals one of the best and most popular
+0:30
+methods right now is to get a list of
+0:31
+phone numbers and then just start
+0:33
+pounding those phone numbers so assess
+0:35
+spending about a dollar for every single
+0:36
+time you want to mail somebody a letter
+0:37
+you can basically call hundreds of
+0:39
+people in one afternoon and basically
+0:41
+the same result but the problem is
+0:43
+usually when we get our list it only
+0:45
+comes with a name mailing address and
+0:47
+property address as well as the
+0:49
+statistics for the house itself so we
+0:51
+can see how many rooms it hath me
+0:53
+bathroom to have but we can't really get
+0:55
+their phone numbers unless we pay for a
+0:57
+skip tracing service
+0:58
+and slip tracing services can be pretty
+1:00
+expensive sometimes costing fifteen to
+1:03
+twenty cents per record which means that
+1:05
+if I have a name and address it's gonna
+1:07
+cost me fifteen to twenty cents to get
+1:09
+that phone number well luckily for us
+1:11
+there's a website that gives us this
+1:12
+phone number for free and if you guys
+1:14
+want to toriel on how to find phone
+1:16
+numbers check out my video over there
+1:17
+where i go over how to skip trace phone
+1:19
+numbers through the MLS but the problem
+1:22
+with doing that is it takes a long long
+1:24
+time imagine going through a thousand
+1:26
+entries having to copy and paste names
+1:29
+over and over and over again and then
+1:31
+search me through a list of all these
+1:33
+potential people and then find their
+1:34
+phone number copying that and then
+1:36
+putting onto excel spreadsheet so I said
+1:38
+why not automate that and that exactly
+1:40
+what I did
+1:41
+so this video I'm gonna go over how the
+1:43
+initial process works how my code works
+1:45
+and the results that come out of it all
+1:47
+this and more coming right up
+1:49
+[Music]
+1:59
+alright guys so the first step that we
+Get a fresh list
+2:01
+need to do is really get a fresh list so
+2:04
+what I'm going to do is I'm gonna go on
+2:06
+to realest realest is a property tax
+2:09
+software that is given to you if you
+2:12
+have MLS access if you don't I'm pretty
+2:15
+sure you need a list very similar to
+2:16
+this by just calling a title agent and
+2:18
+asking for these certain criteria but
+2:21
+basically what I'm doing right now is
+2:22
+I'm look at some properties I don't want
+2:24
+something that's owner-occupied because
+2:26
+recently the people I've been calling
+2:27
+have been so emotionally attached to
+2:29
+their properties that they actually get
+2:31
+mad at me for calling them so we're
+2:32
+going to go with non owner-occupied
+2:34
+properties property city I just chose
+2:37
+somewhere near my house
+2:38
+so Union City I live somewhere in the
+2:40
+Bay Area
+2:41
+South Bay here and it's Union City is
+2:44
+about two cities away from where I'm at
+2:47
+choosing a typical home I don't want
+2:49
+something too big I don't something too
+2:51
+small so 1100 to 1500 square feet for
+2:53
+the building size I also want lots that
+2:57
+are bigger than 5,000 square feet if
+2:58
+your a lot isn't big enough then there's
+3:00
+not really much you can do on the
+3:01
+property and I want the recording date
+3:03
+to be before in 1995 so people who have
+3:06
+had these properties have had them for
+3:08
+over 25 years they don't live in it and
+3:10
+it's a standard house so I kind of know
+3:12
+where I'm getting myself into I click
+3:15
+search and basically I get this
+3:16
+beautiful list of names property
+3:19
+addresses but like I said no phone
+3:21
+numbers so what we're gonna do is we're
+3:23
+gonna export this list and we're going
+3:24
+to try to get these phone numbers so I'm
+3:30
+gonna do a quick export it's gonna give
+3:31
+me all these beautiful information okay
+Rename the file
+3:35
+so this is basically our list it's in
+3:37
+CSV format as you can see here we have
+3:40
+some of these names here we have
+3:41
+property addresses we have the owner
+3:43
+names we have when it was recorded and
+3:46
+all this Hitler information is not
+3:48
+really that important because we only
+3:49
+care ok so the first thing that I'm
+3:52
+going to do is I am going to rename this
+3:56
+file name is something simple like
+3:59
+getting city
+4:02
+right now one of the limitations on my
+4:04
+code is that I have to hard code all the
+4:06
+names in a future I can ask them simple
+4:08
+GUI functionality so that when you run
+4:10
+the file a nice little GUI pops up and
+4:11
+you can browse and choose your file but
+4:13
+for now this works okay so we've changed
+4:17
+this name real quick and then we run it
+4:23
+so before I run the code I want to show
+Before the code
+4:26
+you what we normally would have had to
+4:27
+do so for example we look at this first
+4:29
+person Richard thinks and it's the
+4:33
+property address to 206 Ferrell Avenue
+4:35
+so I'm gonna copy that I'm gonna go to
+4:37
+our website we go to festivals search
+4:41
+calm and this is a union city let's see
+4:46
+what shows up okay so then you look here
+4:49
+you have Maria Fink's Amy O'Conner
+4:54
+almost thanks Daniel corner so you can
+4:58
+kind of tell like the Finks family is
+5:00
+somewhere here see
+5:12
+Alma thinks all my things all my things
+5:17
+see you I have to like scroll down a
+5:19
+little bit to find natural person so I
+5:20
+all of thinks is here I click on her and
+5:23
+I can see some information about where
+5:25
+she lives and you can get her phone
+5:27
+number from here so then BOOM
+5:28
+I just grabbed his phone number copy it
+5:30
+and paste it into a link now this took
+5:33
+me maybe 20-30 seconds now I multiply it
+5:36
+by a thousand and imagine someone having
+5:38
+to do that by sitting on a desk every
+5:40
+single day and I say that if you can do
+5:42
+it automatically just do it
+5:43
+automatically so let's see what a code
+5:45
+does and the see if it works so then as
+5:48
+you can see right here on the Left we
+5:50
+are seeing that it's going through every
+5:52
+single line going into the website
+5:53
+itself looking through everything
+5:55
+getting the data and then looking
+5:57
+through a black youth libraries you
+5:59
+don't renew to know how these things
+6:01
+works really underneath the hood but I
+6:03
+just had this nice output here is that
+6:05
+we know what's working what's not
+6:06
+working don't worry too much about what
+6:09
+these rest codes mean that was for me
+6:11
+when I was debugging sometimes there's
+6:12
+different errors and then these errors
+6:14
+would tell me what the error is so for
+6:16
+example here two hundred means it's good
+6:18
+for twenty nine code now here's a
+6:20
+problem with using my code as it is
+6:23
+right now I'm not using any kind of
+6:25
+crazy proxy stuff I'm not using some
+6:27
+kind of third-party VPN and I'm just
+6:30
+using my own IP address so by using this
+6:32
+code I'm actually going this website a
+6:33
+whole bunch of times every single minute
+6:35
+and eventually the website can detect
+6:39
+that you are kind of a bot and you're
+6:40
+doing some kind of non human activities
+6:43
+so after a while it's gonna throw you
+6:45
+this 429 code 429 code basically means
+6:48
+that you failed the bot check now you
+6:50
+need to do a bot check on this website
+6:52
+so basically what I'm gonna do is you
+6:53
+can either copy paste here and then go
+6:56
+into a website itself and complete the
+6:57
+by check or you can just paste it
+7:00
+because I already copied it
+7:01
+automatically with my code so let's go
+7:03
+to Google Chrome and let's go here and
+7:06
+let's just paste as you can see the
+7:09
+address is already pasted here so let's
+7:12
+see okay am i a human yeah I'm a human
+7:14
+this is kind of like a way to trick the
+7:16
+programming so that yes you are using a
+7:19
+bot but also you are human so you can
+7:22
+pass it this way and then it continues
+7:24
+so that
+7:25
+pace it again oops and let's just
+7:31
+continued here by pressing enter and it
+7:38
+continues so basically by passing the
+7:40
+bot check we just click the blood check
+7:42
+press enter and let it continue
+7:44
+unfortunately right now the program
+7:46
+again is not super robust so every 20
+7:49
+names or so I'm gonna have my checks so
+7:51
+it can be kind of annoying it doesn't
+7:53
+just completely run by itself but it's
+7:56
+better than me having to do this
+7:58
+manually so yeah it's a little bit
+8:01
+inconvenient but not a hundred percent
+8:02
+inconvenient so while this is running I
+8:05
+want to know
+8:06
+with this bot program help you with your
+8:08
+real estate investing business if so let
+8:10
+me know by writing a yes down the
+8:12
+comments down below if I get enough
+8:13
+responses I might release this bot
+8:15
+program for my youtube audience as a
+8:17
+thanks for you guys for supporting this
+8:18
+channel and while we're at it let me
+8:20
+know what kind of other bot programs do
+8:22
+you think would be helpful for you and
+8:23
+your business what things are you not
+8:25
+automating that you wish there was a
+8:26
+easy software to use that could take
+8:28
+that task away from your daily routine
+8:30
+again leave that comment down in the
+8:32
+comment section below so about every 12
+8:36
+names or so if that's one I have to
+8:37
+refresh this which is pretty annoying so
+8:40
+imagine if you have a list of 1000 then
+8:43
+this might take a while because every 10
+8:46
+or 12 entries you do have to do is by
+8:47
+check and continue now if I think about
+8:50
+this there are some ways to get around
+8:51
+this problem so one is to use different
+8:54
+proxies proxies basically means that you
+8:57
+are faking your IP address and then
+8:59
+you're sending different IP addresses to
+9:00
+get this data from but you have to pay
+9:04
+money for it and the whole point of this
+9:05
+is I wanted something on a super super
+9:07
+cheap and also this works so if you
+9:09
+really hate this
+9:10
+you could probably send this to your
+9:11
+virtual assistant and have them do this
+9:12
+for you trust me your virtual assistant
+9:15
+will love you for this if I had a VA do
+9:17
+this for me it will take about a month
+9:18
+to get all these entries done and here
+9:22
+as you can see it's only gonna be a
+9:23
+couple of minutes so it's really not
+9:25
+that bad ok as you can see we have hit
+9:28
+this bot check too many times so Ashley
+9:31
+as it progresses you have to do more and
+9:34
+more complex checks so now they're
+9:37
+making me actually look for cars
+9:39
+so before I could actually create a but
+9:41
+that would be able to click this button
+9:43
+by itself but I could figure out a way
+9:45
+to create a bot to complete those crazy
+9:47
+complex bot checks and of course that's
+9:49
+the whole point of having the bocek's in
+9:51
+the first place when I'm sure there's a
+9:52
+real human behind going to its website
+9:54
+so that's why I eventually I decided no
+9:57
+more proxy checks let's just go straight
+9:59
+up and we'll do this semi manually so I
+10:03
+don't have to do this part but I do have
+10:04
+to complete the bot checks okay we're
+Results
+10:07
+finally done with our script it took us
+10:09
+about 25 minutes or so and I actually
+10:11
+cut out a lot of the things in between
+10:13
+to save some time for this video
+10:15
+now this could've been done a lot
+10:16
+quicker I actually added some timers to
+10:19
+make it take more time before I go for
+10:21
+the next query but to be honest I'm not
+10:23
+sure if it actually works and I might be
+10:24
+just wasting my time so in the future
+10:26
+maybe I'll remove those extra time to
+10:28
+wait before getting xquery
+10:29
+and should just send out a whole bunch
+10:31
+in quick succession just like being the
+10:33
+boss anyway now let's do the big reveal
+10:34
+and see if all of our efforts were worth
+10:37
+it so it basically comes out in an
+10:41
+output file right here output CSV and
+10:44
+bam here it is so as you can see here we
+10:49
+have some amazing phone numbers for our
+10:51
+properties we have the property address
+10:53
+which is actually different than the tax
+10:56
+address because sometimes these people
+10:58
+obviously don't live in these houses
+10:59
+anymore but we have their phone number
+11:01
+right here we have their names and we
+11:04
+have some blanks so what do these blanks
+11:06
+mean well sometimes when we go through
+11:08
+this process we don't actually get these
+11:10
+people through the general search so
+11:12
+maybe instead looking through their
+11:14
+poppy address maybe we look through
+11:15
+their names and then we'll see if
+11:17
+there's any of these properties that
+11:18
+line up but instead of having to
+11:21
+manually search for all these numbers
+11:22
+now we only have to look for these blank
+11:24
+holes now sometimes we have no named
+11:26
+here and somehow we solve phone numbers
+11:28
+unfortunate my code isn't very smart and
+11:30
+it would actually just try to match this
+11:33
+with the phone number and if there is no
+11:35
+name then it would just use the first of
+11:38
+all number that it gets I can do some
+11:39
+work to make it better but that's for a
+11:41
+later time for now usually there's no
+11:44
+name it means that there is some kind of
+11:45
+trust or there is some kind of do not
+11:47
+call this so for best practices don't
+11:50
+call these people just remove them for
+11:51
+your list that's basically
+11:52
+as you can see here this program
+11:54
+basically got most of these names I'm
+11:56
+very happy with the results and it makes
+11:59
+our lives a lot easier so thank you very
+Outro
+12:01
+much for watch this video I hope you
+12:03
+really did enjoy it if you did please
+12:04
+smash that like button and subscribe to
+12:06
+channel to see more videos just like
+12:07
+this one
+12:08
+I release real estate investing content
+12:10
+multiple times a week to help you learn
+12:12
+more with the business and to help you
+12:13
+become a real estate investing boss
+12:15
+again if you guys thought this tool was
+12:17
+helpful
+12:18
+if you guys want a copy please write yes
+12:20
+down the comments down below if I get
+12:22
+enough yeses enough interaction then
+12:24
+maybe I'll think about releasing this to
+12:25
+the public and I also want to know what
+12:27
+are some other tools that can be useful
+12:29
+for your business what are some of the
+12:31
+things that can be automated that you're
+12:33
+doing manually every single day and
+12:34
+you're sick of it I have a lot of free
+12:36
+time we're still in quarantine and I
+12:38
+want to do my best to help you guys out
+12:40
+so please let me know thanks again for
+12:42
+watch the video guys and I'll see you
+12:44
+next time
