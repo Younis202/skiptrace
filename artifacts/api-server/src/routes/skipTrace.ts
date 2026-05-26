@@ -198,6 +198,7 @@ function formatResult(r: typeof skipTraceResultsTable.$inferSelect) {
     state: r.state || "",
     phones: (r.phones as string[]) || [],
     status: r.status,
+    retryCount: r.retryCount,
     error: r.error || undefined,
   };
 }

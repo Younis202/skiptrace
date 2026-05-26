@@ -455,6 +455,8 @@ components:
         status:
           type: string
           enum: [found, not_found, error, pending, processing]
+        retryCount:
+          type: integer
         error:
           type: string
       required:
@@ -464,6 +466,7 @@ components:
         - address
         - status
         - phones
+        - retryCount
 
     JobDetail:
       type: object

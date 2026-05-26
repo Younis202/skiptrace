@@ -25,6 +25,7 @@ export const skipTraceResultsTable = pgTable("skip_trace_results", {
   state: text("state").notNull().default(""),
   phones: jsonb("phones").notNull().default([]),
   status: text("status").notNull().default("pending"),
+  retryCount: integer("retry_count").notNull().default(0),
   error: text("error"),
   rawData: jsonb("raw_data"),
 });

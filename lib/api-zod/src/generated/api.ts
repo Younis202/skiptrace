@@ -77,6 +77,7 @@ export const GetJobResponse = zod.object({
   "state": zod.string().optional(),
   "phones": zod.array(zod.string()),
   "status": zod.enum(['found', 'not_found', 'error', 'pending', 'processing']),
+  "retryCount": zod.number(),
   "error": zod.string().optional()
 })),
   "columnMap": zod.object({

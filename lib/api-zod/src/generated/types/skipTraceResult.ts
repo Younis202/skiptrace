@@ -16,5 +16,6 @@ export interface SkipTraceResult {
   state?: string;
   phones: string[];
   status: SkipTraceResultStatus;
+  retryCount: number;
   error?: string;
 }
