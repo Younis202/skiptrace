@@ -199,6 +199,9 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      kind-of:
+        specifier: ^6.0.3
+        version: 6.0.3
       multer:
         specifier: ^2.1.1
         version: 2.1.1
@@ -2532,6 +2535,10 @@ packages:
 
   kind-of@3.2.2:
     resolution: {integrity: sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ==}
+    engines: {node: '>=0.10.0'}
+
+  kind-of@6.0.3:
+    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
   lazy-cache@0.2.7:
@@ -5350,6 +5357,8 @@ snapshots:
   kind-of@3.2.2:
     dependencies:
       is-buffer: 1.1.6
+
+  kind-of@6.0.3: {}
 
   lazy-cache@0.2.7: {}
 

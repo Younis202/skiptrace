@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: skip-trace
     description: Skip tracing operations
+  - name: proxies
+    description: Proxy management
 paths:
   /healthz:
     get:
@@ -168,8 +170,210 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /proxies:
+    get:
+      operationId: listProxies
+      tags: [proxies]
+      summary: List all proxies
+      responses:
+        "200":
+          description: List of proxies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proxies:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Proxy"
+                required: [proxies]
+    post:
+      operationId: addProxy
+      tags: [proxies]
+      summary: Add a proxy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddProxyInput"
+      responses:
+        "200":
+          description: Proxy added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proxy"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies/bulk:
+    post:
+      operationId: addProxiesBulk
+      tags: [proxies]
+      summary: Add multiple proxies at once (one per line)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkProxyInput"
+      responses:
+        "200":
+          description: Proxies added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkProxyResult"
+
+  /proxies/{proxyId}:
+    delete:
+      operationId: deleteProxy
+      tags: [proxies]
+      summary: Delete a proxy
+      parameters:
+        - name: proxyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Proxy deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required: [ok]
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies/{proxyId}/toggle:
+    post:
+      operationId: toggleProxy
+      tags: [proxies]
+      summary: Enable or disable a proxy
+      parameters:
+        - name: proxyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Proxy toggled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proxy"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies/{proxyId}/test:
+    post:
+      operationId: testProxy
+      tags: [proxies]
+      summary: Test a proxy connection
+      parameters:
+        - name: proxyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Test result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  latencyMs:
+                    type: integer
+                  error:
+                    type: string
+                required: [ok]
+
 components:
   schemas:
+    Proxy:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        label:
+          type: string
+        isActive:
+          type: boolean
+        successCount:
+          type: integer
+        failCount:
+          type: integer
+        lastUsedAt:
+          type: string
+          format: date-time
+        lastError:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - label
+        - isActive
+        - successCount
+        - failCount
+        - createdAt
+
+    BulkProxyInput:
+      type: object
+      properties:
+        lines:
+          type: string
+          description: Proxy URLs one per line
+      required: [lines]
+
+    BulkProxyResult:
+      type: object
+      properties:
+        added:
+          type: integer
+        skipped:
+          type: integer
+      required: [added, skipped]
+
+    AddProxyInput:
+      type: object
+      properties:
+        url:
+          type: string
+          description: "Proxy URL e.g. http://user:pass@host:port or socks5://host:port"
+        label:
+          type: string
+      required:
+        - url
+
     HealthStatus:
       type: object
       properties:

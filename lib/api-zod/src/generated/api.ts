@@ -110,3 +110,101 @@ export const CancelJobResponse = zod.object({
 })
 
 
+/**
+ * @summary List all proxies
+ */
+export const ListProxiesResponse = zod.object({
+  "proxies": zod.array(zod.object({
+  "id": zod.string(),
+  "url": zod.string(),
+  "label": zod.string(),
+  "isActive": zod.boolean(),
+  "successCount": zod.number(),
+  "failCount": zod.number(),
+  "lastUsedAt": zod.coerce.date().optional(),
+  "lastError": zod.string().optional(),
+  "createdAt": zod.coerce.date()
+}))
+})
+
+
+/**
+ * @summary Add a proxy
+ */
+export const AddProxyBody = zod.object({
+  "url": zod.string().describe('Proxy URL e.g. http:\/\/user:pass@host:port or socks5:\/\/host:port'),
+  "label": zod.string().optional()
+})
+
+export const AddProxyResponse = zod.object({
+  "id": zod.string(),
+  "url": zod.string(),
+  "label": zod.string(),
+  "isActive": zod.boolean(),
+  "successCount": zod.number(),
+  "failCount": zod.number(),
+  "lastUsedAt": zod.coerce.date().optional(),
+  "lastError": zod.string().optional(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Add multiple proxies at once (one per line)
+ */
+export const AddProxiesBulkBody = zod.object({
+  "lines": zod.string().describe('Proxy URLs one per line')
+})
+
+export const AddProxiesBulkResponse = zod.object({
+  "added": zod.number(),
+  "skipped": zod.number()
+})
+
+
+/**
+ * @summary Delete a proxy
+ */
+export const DeleteProxyParams = zod.object({
+  "proxyId": zod.coerce.string()
+})
+
+export const DeleteProxyResponse = zod.object({
+  "ok": zod.boolean()
+})
+
+
+/**
+ * @summary Enable or disable a proxy
+ */
+export const ToggleProxyParams = zod.object({
+  "proxyId": zod.coerce.string()
+})
+
+export const ToggleProxyResponse = zod.object({
+  "id": zod.string(),
+  "url": zod.string(),
+  "label": zod.string(),
+  "isActive": zod.boolean(),
+  "successCount": zod.number(),
+  "failCount": zod.number(),
+  "lastUsedAt": zod.coerce.date().optional(),
+  "lastError": zod.string().optional(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Test a proxy connection
+ */
+export const TestProxyParams = zod.object({
+  "proxyId": zod.coerce.string()
+})
+
+export const TestProxyResponse = zod.object({
+  "ok": zod.boolean(),
+  "latencyMs": zod.number().optional(),
+  "error": zod.string().optional()
+})
+
+

@@ -20,16 +20,23 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AddProxyInput,
+  BulkProxyInput,
+  BulkProxyResult,
+  DeleteProxy200,
   ErrorResponse,
   HealthStatus,
   JobCreated,
   JobDetail,
   ListJobs200,
+  ListProxies200,
+  Proxy,
+  TestProxy200,
   UploadSkipTraceListParams
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
-import type { ErrorType } from '../custom-fetch';
+import type { ErrorType , BodyType } from '../custom-fetch';
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -495,5 +502,434 @@ export const useCancelJob = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getCancelJobMutationOptions(options));
+    }
+
+export const getListProxiesUrl = () => {
+
+
+
+
+  return `/api/proxies`
+}
+
+/**
+ * @summary List all proxies
+ */
+export const listProxies = async ( options?: RequestInit): Promise<ListProxies200> => {
+
+  return customFetch<ListProxies200>(getListProxiesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListProxiesQueryKey = () => {
+    return [
+    `/api/proxies`
+    ] as const;
+    }
+
+
+export const getListProxiesQueryOptions = <TData = Awaited<ReturnType<typeof listProxies>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProxies>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListProxiesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProxies>>> = ({ signal }) => listProxies({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProxies>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListProxiesQueryResult = NonNullable<Awaited<ReturnType<typeof listProxies>>>
+export type ListProxiesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List all proxies
+ */
+
+export function useListProxies<TData = Awaited<ReturnType<typeof listProxies>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProxies>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListProxiesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getAddProxyUrl = () => {
+
+
+
+
+  return `/api/proxies`
+}
+
+/**
+ * @summary Add a proxy
+ */
+export const addProxy = async (addProxyInput: AddProxyInput, options?: RequestInit): Promise<Proxy> => {
+
+  return customFetch<Proxy>(getAddProxyUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      addProxyInput,)
+  }
+);}
+
+
+
+
+export const getAddProxyMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addProxy>>, TError,{data: BodyType<AddProxyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof addProxy>>, TError,{data: BodyType<AddProxyInput>}, TContext> => {
+
+const mutationKey = ['addProxy'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addProxy>>, {data: BodyType<AddProxyInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  addProxy(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AddProxyMutationResult = NonNullable<Awaited<ReturnType<typeof addProxy>>>
+    export type AddProxyMutationBody = BodyType<AddProxyInput>
+    export type AddProxyMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Add a proxy
+ */
+export const useAddProxy = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addProxy>>, TError,{data: BodyType<AddProxyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof addProxy>>,
+        TError,
+        {data: BodyType<AddProxyInput>},
+        TContext
+      > => {
+      return useMutation(getAddProxyMutationOptions(options));
+    }
+
+export const getAddProxiesBulkUrl = () => {
+
+
+
+
+  return `/api/proxies/bulk`
+}
+
+/**
+ * @summary Add multiple proxies at once (one per line)
+ */
+export const addProxiesBulk = async (bulkProxyInput: BulkProxyInput, options?: RequestInit): Promise<BulkProxyResult> => {
+
+  return customFetch<BulkProxyResult>(getAddProxiesBulkUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      bulkProxyInput,)
+  }
+);}
+
+
+
+
+export const getAddProxiesBulkMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addProxiesBulk>>, TError,{data: BodyType<BulkProxyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof addProxiesBulk>>, TError,{data: BodyType<BulkProxyInput>}, TContext> => {
+
+const mutationKey = ['addProxiesBulk'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addProxiesBulk>>, {data: BodyType<BulkProxyInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  addProxiesBulk(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AddProxiesBulkMutationResult = NonNullable<Awaited<ReturnType<typeof addProxiesBulk>>>
+    export type AddProxiesBulkMutationBody = BodyType<BulkProxyInput>
+    export type AddProxiesBulkMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Add multiple proxies at once (one per line)
+ */
+export const useAddProxiesBulk = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addProxiesBulk>>, TError,{data: BodyType<BulkProxyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof addProxiesBulk>>,
+        TError,
+        {data: BodyType<BulkProxyInput>},
+        TContext
+      > => {
+      return useMutation(getAddProxiesBulkMutationOptions(options));
+    }
+
+export const getDeleteProxyUrl = (proxyId: string,) => {
+
+
+
+
+  return `/api/proxies/${proxyId}`
+}
+
+/**
+ * @summary Delete a proxy
+ */
+export const deleteProxy = async (proxyId: string, options?: RequestInit): Promise<DeleteProxy200> => {
+
+  return customFetch<DeleteProxy200>(getDeleteProxyUrl(proxyId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteProxyMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProxy>>, TError,{proxyId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteProxy>>, TError,{proxyId: string}, TContext> => {
+
+const mutationKey = ['deleteProxy'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProxy>>, {proxyId: string}> = (props) => {
+          const {proxyId} = props ?? {};
+
+          return  deleteProxy(proxyId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteProxyMutationResult = NonNullable<Awaited<ReturnType<typeof deleteProxy>>>
+
+    export type DeleteProxyMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Delete a proxy
+ */
+export const useDeleteProxy = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProxy>>, TError,{proxyId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteProxy>>,
+        TError,
+        {proxyId: string},
+        TContext
+      > => {
+      return useMutation(getDeleteProxyMutationOptions(options));
+    }
+
+export const getToggleProxyUrl = (proxyId: string,) => {
+
+
+
+
+  return `/api/proxies/${proxyId}/toggle`
+}
+
+/**
+ * @summary Enable or disable a proxy
+ */
+export const toggleProxy = async (proxyId: string, options?: RequestInit): Promise<Proxy> => {
+
+  return customFetch<Proxy>(getToggleProxyUrl(proxyId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getToggleProxyMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof toggleProxy>>, TError,{proxyId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof toggleProxy>>, TError,{proxyId: string}, TContext> => {
+
+const mutationKey = ['toggleProxy'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof toggleProxy>>, {proxyId: string}> = (props) => {
+          const {proxyId} = props ?? {};
+
+          return  toggleProxy(proxyId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ToggleProxyMutationResult = NonNullable<Awaited<ReturnType<typeof toggleProxy>>>
+
+    export type ToggleProxyMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Enable or disable a proxy
+ */
+export const useToggleProxy = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof toggleProxy>>, TError,{proxyId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof toggleProxy>>,
+        TError,
+        {proxyId: string},
+        TContext
+      > => {
+      return useMutation(getToggleProxyMutationOptions(options));
+    }
+
+export const getTestProxyUrl = (proxyId: string,) => {
+
+
+
+
+  return `/api/proxies/${proxyId}/test`
+}
+
+/**
+ * @summary Test a proxy connection
+ */
+export const testProxy = async (proxyId: string, options?: RequestInit): Promise<TestProxy200> => {
+
+  return customFetch<TestProxy200>(getTestProxyUrl(proxyId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getTestProxyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof testProxy>>, TError,{proxyId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof testProxy>>, TError,{proxyId: string}, TContext> => {
+
+const mutationKey = ['testProxy'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof testProxy>>, {proxyId: string}> = (props) => {
+          const {proxyId} = props ?? {};
+
+          return  testProxy(proxyId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TestProxyMutationResult = NonNullable<Awaited<ReturnType<typeof testProxy>>>
+
+    export type TestProxyMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Test a proxy connection
+ */
+export const useTestProxy = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof testProxy>>, TError,{proxyId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof testProxy>>,
+        TError,
+        {proxyId: string},
+        TContext
+      > => {
+      return useMutation(getTestProxyMutationOptions(options));
     }
 

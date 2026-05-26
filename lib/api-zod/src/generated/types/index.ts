@@ -6,6 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './addProxyInput';
+export * from './bulkProxyInput';
+export * from './bulkProxyResult';
+export * from './deleteProxy200';
 export * from './errorResponse';
 export * from './healthStatus';
 export * from './job';
@@ -15,6 +19,9 @@ export * from './jobDetailColumnMap';
 export * from './jobDetailStatus';
 export * from './jobStatus';
 export * from './listJobs200';
+export * from './listProxies200';
+export * from './proxy';
 export * from './skipTraceResult';
 export * from './skipTraceResultStatus';
+export * from './testProxy200';
 export * from './uploadSkipTraceListParams';

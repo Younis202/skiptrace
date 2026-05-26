@@ -5,6 +5,34 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface Proxy {
+  id: string;
+  url: string;
+  label: string;
+  isActive: boolean;
+  successCount: number;
+  failCount: number;
+  lastUsedAt?: string;
+  lastError?: string;
+  createdAt: string;
+}
+
+export interface BulkProxyInput {
+  /** Proxy URLs one per line */
+  lines: string;
+}
+
+export interface BulkProxyResult {
+  added: number;
+  skipped: number;
+}
+
+export interface AddProxyInput {
+  /** Proxy URL e.g. http://user:pass@host:port or socks5://host:port */
+  url: string;
+  label?: string;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -120,5 +148,19 @@ stateCol?: string;
 
 export type ListJobs200 = {
   jobs: Job[];
+};
+
+export type ListProxies200 = {
+  proxies: Proxy[];
+};
+
+export type DeleteProxy200 = {
+  ok: boolean;
+};
+
+export type TestProxy200 = {
+  ok: boolean;
+  latencyMs?: number;
+  error?: string;
 };
 

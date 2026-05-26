@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -29,10 +29,25 @@ export const skipTraceResultsTable = pgTable("skip_trace_results", {
   rawData: jsonb("raw_data"),
 });
 
+export const proxiesTable = pgTable("proxies", {
+  id: text("id").primaryKey(),
+  url: text("url").notNull(),
+  label: text("label").notNull().default(""),
+  isActive: boolean("is_active").notNull().default(true),
+  successCount: integer("success_count").notNull().default(0),
+  failCount: integer("fail_count").notNull().default(0),
+  lastUsedAt: timestamp("last_used_at"),
+  lastError: text("last_error"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertSkipTraceJobSchema = createInsertSchema(skipTraceJobsTable);
 export const insertSkipTraceResultSchema = createInsertSchema(skipTraceResultsTable);
+export const insertProxySchema = createInsertSchema(proxiesTable);
 
 export type SkipTraceJob = typeof skipTraceJobsTable.$inferSelect;
 export type InsertSkipTraceJob = z.infer<typeof insertSkipTraceJobSchema>;
 export type SkipTraceResult = typeof skipTraceResultsTable.$inferSelect;
 export type InsertSkipTraceResult = z.infer<typeof insertSkipTraceResultSchema>;
+export type Proxy = typeof proxiesTable.$inferSelect;
+export type InsertProxy = z.infer<typeof insertProxySchema>;
