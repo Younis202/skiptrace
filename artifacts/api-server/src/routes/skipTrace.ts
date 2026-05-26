@@ -66,6 +66,8 @@ router.post("/skip-trace/upload", upload.single("file"), async (req, res) => {
       cityCol,
       stateCol,
       defaultState,
+      startRow,
+      endRow,
     } = req.query as Record<string, string>;
 
     if (!addressCol) {
@@ -84,6 +86,18 @@ router.post("/skip-trace/upload", upload.single("file"), async (req, res) => {
 
     if (records.length === 0) {
       res.status(400).json({ error: "CSV file is empty" });
+      return;
+    }
+
+    // Apply row range slicing (1-based, inclusive)
+    const start = parseInt(startRow || "1", 10);
+    const end = parseInt(endRow || "0", 10);
+    const sliceStart = isNaN(start) || start < 1 ? 0 : start - 1;
+    const sliceEnd = isNaN(end) || end <= 0 ? records.length : Math.min(end, records.length);
+    records = records.slice(sliceStart, sliceEnd);
+
+    if (records.length === 0) {
+      res.status(400).json({ error: "No rows in the selected range" });
       return;
     }
 

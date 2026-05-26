@@ -19,13 +19,15 @@ type NameMode = "separate" | "fullname";
 
 type ColumnMapping = {
   nameMode: NameMode;
-  ownerNameCol: string;   // used when nameMode = "fullname"
-  firstNameCol: string;   // used when nameMode = "separate"
-  lastNameCol: string;    // used when nameMode = "separate"
+  ownerNameCol: string;
+  firstNameCol: string;
+  lastNameCol: string;
   addressCol: string;
   cityCol: string;
   stateCol: string;
-  defaultState: string;   // used when stateCol is empty
+  defaultState: string;
+  startRow: string;
+  endRow: string;
 };
 
 export default function Dashboard() {
@@ -48,6 +50,8 @@ export default function Dashboard() {
     cityCol: "",
     stateCol: "",
     defaultState: "",
+    startRow: "1",
+    endRow: "",
   });
 
   const [isUploading, setIsUploading] = useState(false);
@@ -97,6 +101,8 @@ export default function Dashboard() {
         cityCol,
         stateCol,
         defaultState: !hasStateCol ? "TX" : "",
+        startRow: "1",
+        endRow: "",
       });
     };
     reader.readAsText(selectedFile);
@@ -129,6 +135,11 @@ export default function Dashboard() {
         if (mapping.firstNameCol) params.append("firstNameCol", mapping.firstNameCol);
         if (mapping.lastNameCol) params.append("lastNameCol", mapping.lastNameCol);
       }
+
+      const start = parseInt(mapping.startRow || "1", 10);
+      const end = parseInt(mapping.endRow || "0", 10);
+      if (!isNaN(start) && start > 1) params.append("startRow", String(start));
+      if (!isNaN(end) && end > 0) params.append("endRow", String(end));
 
       const response = await fetch(`/api/skip-trace/upload?${params.toString()}`, {
         method: "POST",
@@ -429,6 +440,42 @@ export default function Dashboard() {
                         ))}
                       </TableBody>
                     </Table>
+                  </div>
+
+                  {/* Row range */}
+                  <div className="rounded-md border border-border bg-muted/30 p-4 space-y-3">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Row Range <span className="font-normal normal-case">(process a slice of your CSV)</span>
+                    </Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <Label className="text-xs">Start Row</Label>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="1"
+                          className="font-mono"
+                          value={mapping.startRow}
+                          onChange={(e) => setMapping({ ...mapping, startRow: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-xs">End Row <span className="text-muted-foreground font-normal">(blank = all)</span></Label>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="e.g. 500"
+                          className="font-mono"
+                          value={mapping.endRow}
+                          onChange={(e) => setMapping({ ...mapping, endRow: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    {mapping.endRow && mapping.startRow && (
+                      <p className="text-xs text-primary font-mono">
+                        ▶ Will process rows {mapping.startRow} – {mapping.endRow} ({Math.max(0, parseInt(mapping.endRow) - parseInt(mapping.startRow) + 1)} leads)
+                      </p>
+                    )}
                   </div>
 
                   <Button
