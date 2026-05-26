@@ -11,6 +11,46 @@ import { runSkipTrace } from "../lib/skipTracer";
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
 
+/**
+ * Parse an "owner_name" field in "LASTNAME FIRSTNAME [MIDDLE] [& PARTNER] [JR/SR] [C/O ...]" format.
+ * Returns { firstName, lastName } — firstName is the key match field.
+ *
+ * Examples:
+ *   "WU ALPHONSE JUN"              → { lastName: "WU",      firstName: "ALPHONSE" }
+ *   "CHIRINOS LUIS & ESTHER"       → { lastName: "CHIRINOS", firstName: "LUIS" }
+ *   "TRICK-THORNTON ALISON D C/O"  → { lastName: "TRICK-THORNTON", firstName: "ALISON" }
+ *   "MOORE HARRY J JR"             → { lastName: "MOORE",   firstName: "HARRY" }
+ */
+function parseOwnerName(raw: string): { firstName: string; lastName: string } {
+  if (!raw) return { firstName: "", lastName: "" };
+
+  let name = raw
+    .replace(/\s+C\/O\b.*/i, "")       // strip C/O and everything after
+    .replace(/\s+ET\s+AL\b.*/i, "")    // strip ET AL
+    .replace(/\s+%\s+.*/i, "")         // strip % ...
+    .replace(/\s+&\s+.*/i, "")         // strip & PARTNER
+    .replace(/\bREVOCABLE\b.*/i, "")   // strip REVOCABLE TRUST etc.
+    .replace(/\bTRUST\b.*/i, "")
+    .replace(/\b(TR|LLC|INC|CORP|LTD)\b.*/i, "")
+    .trim();
+
+  const SUFFIXES = new Set(["JR", "SR", "II", "III", "IV", "JR.", "SR.", "ESQ"]);
+  const parts = name.split(/\s+/).filter(Boolean);
+
+  if (parts.length === 0) return { firstName: "", lastName: "" };
+  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
+
+  const lastName = parts[0];
+
+  // Second word is first name — skip if it's a suffix
+  let firstName = parts[1];
+  if (SUFFIXES.has(firstName.toUpperCase()) && parts.length > 2) {
+    firstName = parts[2];
+  }
+
+  return { firstName, lastName };
+}
+
 router.post("/skip-trace/upload", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
@@ -18,7 +58,15 @@ router.post("/skip-trace/upload", upload.single("file"), async (req, res) => {
       return;
     }
 
-    const { firstNameCol, lastNameCol, addressCol, cityCol, stateCol } = req.query as Record<string, string>;
+    const {
+      firstNameCol,
+      lastNameCol,
+      ownerNameCol,
+      addressCol,
+      cityCol,
+      stateCol,
+      defaultState,
+    } = req.query as Record<string, string>;
 
     if (!addressCol) {
       res.status(400).json({ error: "addressCol query param is required" });
@@ -39,7 +87,16 @@ router.post("/skip-trace/upload", upload.single("file"), async (req, res) => {
       return;
     }
 
-    const columnMap = { firstNameCol: firstNameCol || "", lastNameCol: lastNameCol || "", addressCol, cityCol: cityCol || "", stateCol: stateCol || "" };
+    const useOwnerName = Boolean(ownerNameCol);
+    const columnMap = {
+      ownerNameCol: ownerNameCol || "",
+      firstNameCol: firstNameCol || "",
+      lastNameCol: lastNameCol || "",
+      addressCol,
+      cityCol: cityCol || "",
+      stateCol: stateCol || "",
+      defaultState: defaultState || "",
+    };
     const jobId = uuidv4();
 
     await db.insert(skipTraceJobsTable).values({
@@ -52,19 +109,35 @@ router.post("/skip-trace/upload", upload.single("file"), async (req, res) => {
       columnMap,
     });
 
-    const resultRows = records.map((row, index) => ({
-      id: uuidv4(),
-      jobId,
-      rowIndex: index,
-      firstName: (columnMap.firstNameCol ? row[columnMap.firstNameCol] : "") || "",
-      lastName: (columnMap.lastNameCol ? row[columnMap.lastNameCol] : "") || "",
-      address: row[columnMap.addressCol] || "",
-      city: (columnMap.cityCol ? row[columnMap.cityCol] : "") || "",
-      state: (columnMap.stateCol ? row[columnMap.stateCol] : "") || "",
-      phones: [],
-      status: "pending",
-      rawData: row,
-    }));
+    const resultRows = records.map((row, index) => {
+      let firstName = "";
+      let lastName = "";
+
+      if (useOwnerName && ownerNameCol && row[ownerNameCol]) {
+        const parsed = parseOwnerName(row[ownerNameCol]);
+        firstName = parsed.firstName;
+        lastName = parsed.lastName;
+      } else {
+        firstName = (firstNameCol ? row[firstNameCol] : "") || "";
+        lastName = (lastNameCol ? row[lastNameCol] : "") || "";
+      }
+
+      const state = (stateCol ? row[stateCol] : "") || defaultState || "";
+
+      return {
+        id: uuidv4(),
+        jobId,
+        rowIndex: index,
+        firstName,
+        lastName,
+        address: row[addressCol] || "",
+        city: (cityCol ? row[cityCol] : "") || "",
+        state,
+        phones: [],
+        status: "pending",
+        rawData: row,
+      };
+    });
 
     await db.insert(skipTraceResultsTable).values(resultRows);
 
