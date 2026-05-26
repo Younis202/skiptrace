@@ -1,0 +1,23 @@
+ <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in August of 2010</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 579-2322 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-579-2322">(281) 579-2322</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in February of 2009</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 345-7254 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-345-7254">(281) 345-7254</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in October of 2020</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (404) 327-9874 (LandLine/Services - Bellsouth Telecommunications Inc dba Southern Bell Telephone &amp; Telegraph)" href="/phone/404-327-9874">(404) 327-9874</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Bellsouth Telecommunications Inc dba Southern Bell Telephone &amp; Telegraph</span>
+                                            <small><span class="d-block last-reported">Last reported in June of 2017</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (832) 788-0627 (Wireless - New Cingular Wireless PCS LLC - GA)" href="/phone/832-788-0627">(832) 788-0627</a></h3>

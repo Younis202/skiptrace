@@ -1,0 +1,3 @@
+- [Playwright esbuild externals](playwright-esbuild-externals.md) — playwright-extra and puppeteer-extra-plugin-stealth must be in esbuild external list or runtime crashes with missing CJS deps.
+- [CyberBackgroundChecks URL](cyberbackgroundchecks-url.md) — use /address/{street-slug}/{city-slug}/{state-slug}/ as primary search, people/search as fallback.
+- [Skip Tracer architecture](skip-tracer-arch.md) — job runs async, polls every 2s from frontend, MAX_RETRIES=3 auto-retry with fresh proxy, round-robin proxy rotation.

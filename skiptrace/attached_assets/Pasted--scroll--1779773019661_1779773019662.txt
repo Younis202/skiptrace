@@ -1,0 +1,22 @@
+
+بدها هيظهر كذا نتيجه لانه مش بيظهر نتيجه واحده زي مانت عارف ف الكود بتاعنا هيعمل scroll مثلا او يدور ف النتايج اللي هتطلع للاكتر حاجه مشابهه وهنا ياجي دور الاسم اللي معانا يطابق الاسم بتاع الlead اللي بيددور عليها فاهم؟ يشوف لو نفس الاسم يبقي هو دا يقوم او اسهل لو يعرف مثلا يسرش اللي هو لما انا دوس مثلا ctrl + f مثلا واكتب اللي عاوز اسرش عليه ف لو الاسم موجود تمام يخش علي الملف بتاعه اللي هو view detials :
+<a title="View full address history, phone history, emails, relatives, associates, businesses and more for Christopher R Mcmanus in Katy, TX 77449 4701" class="btn btn-primary btn-block" href="/detail/christopher-r-mcmanus/pidzxqylypbammgxxqyqbx">
+                    <i class="fas fa-eye mr-1 mb-1"></i>
+                    VIEW DETAILS
+                </a>
+اللينك اللي زي دا اللي هيبقي بتاعه مثلا 
+
+يخش يجيب ارقام التليفونات بتاعته اللي موجوده سواء رقم اكتر من رقم ظبط الدنيا :
+<div class="row" bis_skin_checked="1">
+                            <div class="col-md-12 text-secondary" bis_skin_checked="1">
+                                <hr>
+                                <h2 class="section-label"><i class="fad fa-mobile-alt text-warning mr-1 mb-1"></i><span class="phones-label section-label">Phone Numbers</span></h2>
+
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 463-7629 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-463-7629">(281) 463-7629</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in August of 2010</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 579-2322 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-579-2322">(281) 579-2322</a></h3>
+                                        <p>

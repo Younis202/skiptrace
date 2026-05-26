@@ -1,0 +1,524 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: skip-trace
+    description: Skip tracing operations
+  - name: proxies
+    description: Proxy management
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /skip-trace/upload:
+    post:
+      operationId: uploadSkipTraceList
+      tags: [skip-trace]
+      summary: Upload CSV list for skip tracing
+      description: Upload a CSV file with property addresses to skip trace. File is sent as multipart/form-data.
+      parameters:
+        - name: firstNameCol
+          in: query
+          schema:
+            type: string
+          description: Column name for first name
+        - name: lastNameCol
+          in: query
+          schema:
+            type: string
+          description: Column name for last name
+        - name: addressCol
+          in: query
+          schema:
+            type: string
+          description: Column name for address
+        - name: cityCol
+          in: query
+          schema:
+            type: string
+          description: Column name for city
+        - name: stateCol
+          in: query
+          schema:
+            type: string
+          description: Column name for state
+      responses:
+        "200":
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobCreated"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /skip-trace/jobs:
+    get:
+      operationId: listJobs
+      tags: [skip-trace]
+      summary: List all skip trace jobs
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Job"
+                required: [jobs]
+
+  /skip-trace/jobs/{jobId}:
+    get:
+      operationId: getJob
+      tags: [skip-trace]
+      summary: Get job status and progress
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobDetail"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /skip-trace/jobs/{jobId}/results:
+    get:
+      operationId: getJobResults
+      tags: [skip-trace]
+      summary: Download results as CSV
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: CSV file with results
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /skip-trace/jobs/{jobId}/cancel:
+    post:
+      operationId: cancelJob
+      tags: [skip-trace]
+      summary: Cancel a running job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobCreated"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies:
+    get:
+      operationId: listProxies
+      tags: [proxies]
+      summary: List all proxies
+      responses:
+        "200":
+          description: List of proxies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proxies:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Proxy"
+                required: [proxies]
+    post:
+      operationId: addProxy
+      tags: [proxies]
+      summary: Add a proxy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddProxyInput"
+      responses:
+        "200":
+          description: Proxy added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proxy"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies/bulk:
+    post:
+      operationId: addProxiesBulk
+      tags: [proxies]
+      summary: Add multiple proxies at once (one per line)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkProxyInput"
+      responses:
+        "200":
+          description: Proxies added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkProxyResult"
+
+  /proxies/{proxyId}:
+    delete:
+      operationId: deleteProxy
+      tags: [proxies]
+      summary: Delete a proxy
+      parameters:
+        - name: proxyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Proxy deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required: [ok]
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies/{proxyId}/toggle:
+    post:
+      operationId: toggleProxy
+      tags: [proxies]
+      summary: Enable or disable a proxy
+      parameters:
+        - name: proxyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Proxy toggled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proxy"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /proxies/{proxyId}/test:
+    post:
+      operationId: testProxy
+      tags: [proxies]
+      summary: Test a proxy connection
+      parameters:
+        - name: proxyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Test result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  latencyMs:
+                    type: integer
+                  error:
+                    type: string
+                required: [ok]
+
+components:
+  schemas:
+    Proxy:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        label:
+          type: string
+        isActive:
+          type: boolean
+        successCount:
+          type: integer
+        failCount:
+          type: integer
+        lastUsedAt:
+          type: string
+          format: date-time
+        lastError:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - label
+        - isActive
+        - successCount
+        - failCount
+        - createdAt
+
+    BulkProxyInput:
+      type: object
+      properties:
+        lines:
+          type: string
+          description: Proxy URLs one per line
+      required: [lines]
+
+    BulkProxyResult:
+      type: object
+      properties:
+        added:
+          type: integer
+        skipped:
+          type: integer
+      required: [added, skipped]
+
+    AddProxyInput:
+      type: object
+      properties:
+        url:
+          type: string
+          description: "Proxy URL e.g. http://user:pass@host:port or socks5://host:port"
+        label:
+          type: string
+      required:
+        - url
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    JobCreated:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+      required:
+        - jobId
+        - status
+
+    Job:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        totalRows:
+          type: integer
+        processedRows:
+          type: integer
+        foundCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        fileName:
+          type: string
+      required:
+        - jobId
+        - status
+        - totalRows
+        - processedRows
+        - foundCount
+        - createdAt
+        - updatedAt
+        - fileName
+
+    SkipTraceResult:
+      type: object
+      properties:
+        rowIndex:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        phones:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [found, not_found, error, pending, processing]
+        retryCount:
+          type: integer
+        error:
+          type: string
+      required:
+        - rowIndex
+        - firstName
+        - lastName
+        - address
+        - status
+        - phones
+        - retryCount
+
+    JobDetail:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        totalRows:
+          type: integer
+        processedRows:
+          type: integer
+        foundCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        fileName:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkipTraceResult"
+        columnMap:
+          type: object
+          properties:
+            firstNameCol:
+              type: string
+            lastNameCol:
+              type: string
+            addressCol:
+              type: string
+            cityCol:
+              type: string
+            stateCol:
+              type: string
+          required:
+            - firstNameCol
+            - lastNameCol
+            - addressCol
+      required:
+        - jobId
+        - status
+        - totalRows
+        - processedRows
+        - foundCount
+        - createdAt
+        - updatedAt
+        - fileName
+        - results
+        - columnMap

@@ -70,7 +70,6 @@ autoInstallPeers: false
 
 onlyBuiltDependencies:
   - '@swc/core'
-  - '@playwright/browser-chromium'
   - esbuild
   - msw
   - unrs-resolver

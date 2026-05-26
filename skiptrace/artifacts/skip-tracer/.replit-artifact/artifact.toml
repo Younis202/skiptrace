@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Skip Tracer"
+version = "1.0.0"
+id = "artifacts/skip-tracer"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24810
+
+[services.development]
+run = "pnpm --filter @workspace/skip-tracer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/skip-tracer", "run", "build" ]
+publicDir = "artifacts/skip-tracer/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24810"
+BASE_PATH = "/"
