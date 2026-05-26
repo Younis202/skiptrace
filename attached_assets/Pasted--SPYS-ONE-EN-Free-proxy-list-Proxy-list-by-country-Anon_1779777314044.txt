@@ -1,0 +1,89 @@
+
+SPYS.ONE/EN/
+Free proxy list
+Proxy list by country
+Anonymous free proxy
+HTTPS/SSL proxy
+SOCKS proxy list
+Proxy by ASN/ORG
+Proxy by cities
+Proxy by ports
+HTTP proxy list
+IPinfo
+FineProxy.org
+Free proxy lists United States (US). USA proxy servers.
+See also North American proxies Show 
+30
+ ANM 
+All
+ SSL 
+All
+ Port 
+All
+ Type 
+All
+ Sort 
+Date
+792 proxies	Permanent link to this page: https://spys.one/free-proxy-list/US/
+Proxy address:port	Proxy type	Anonymity*	Country (city/region)	Hostname/ORG	Latency**	Speed***	Uptime	Check date (GMT+03)
+38.108.68.181:3128	HTTP (Squid)	NOA	US Santa Clara (California)	38.108.68.181 (VEXXHOST, Inc.)	19.035	
+78% (14) -	26-may-2026 09:10 (24 mins ago)
+209.135.168.41:80	HTTP	ANM	US Houston (Texas)	static.209.135.168.41.dartnode.net (Snaju Development)	1.469	
+46% (381) +	26-may-2026 09:05 (29 mins ago)
+170.106.136.181:31002	HTTPS	HIA	US Santa Clara (California)	170.106.136.181 (Tencent Building, Kejizhongyi Avenue)	1.658	
+28% (14) +	26-may-2026 08:57 (37 mins ago)
+45.32.192.240:9000	HTTP	ANM	US Dallas (Texas)	45.32.192.240.vultrusercontent.com (The Constant Company, LLC)	11.868	
+28% (5) -	26-may-2026 07:15 (2 hours ago)
+37.16.9.4:3128	HTTPS (Squid)	ANM	US !!!	ip-37-16-9-4.customer.flyio.net (Fly.io, Inc.)	7.723	
+33% (7) -	26-may-2026 06:57 (2 hours ago)
+98.170.57.231:4145	SOCKS5	HIA	US	98.170.57.231 (Cox Communications Inc.)	1.087	
+86% (3441) -	26-may-2026 05:57 (3 hours ago)
+107.174.3.75:3128	HTTP (Squid)	NOA	US Los Angeles (California)	107-174-3-75-host.colocrossing.com (HostPapa)	21	
+8% (1) -	26-may-2026 05:57 (3 hours ago)
+67.201.35.145:4145	SOCKS5	HIA	US	www01.irishtitan.ul.zerolag.com (Performive LLC)	1.058	
+99% (183) +	26-may-2026 05:42 (3 hours ago)
+72.207.109.5:4145	SOCKS5	HIA	US Houston (Texas)	72.207.109.5 (Cox Communications Inc.)	1.112	
+98% (129) -	26-may-2026 05:27 (4 hours ago)
+174.137.134.182:2999	HTTP	ANM	US	mrl182.yardcottage.com (Webair Internet Development Company Inc.)	0.559	
+72% (34) +	26-may-2026 05:12 (4 hours ago)
+98.153.152.141:7070	HTTP (Mikrotik)	NOA	US Westminster (California)	syn-098-153-152-141.biz.spectrum.com (Charter Communications Inc)	11.211	
+18% (16) -	26-may-2026 05:07 (4 hours ago)
+45.32.69.101:9000	HTTP	ANM	US Los Angeles (California)	45.32.69.101.vultrusercontent.com (The Constant Company, LLC)	10.95	
+42% (10) -	26-may-2026 04:51 (4 hours ago)
+91.92.243.170:8080	HTTPS	ANM	US New York	91.92.243.170 (Omegatech LTD)	13.278	
+50% (1) -	26-may-2026 04:35 (4 hours ago)
+107.175.207.230:7890	HTTP	HIA	US Buffalo (New York) !!!	107-175-207-230-host.colocrossing.com (HostPapa)	5.726	
+new -	26-may-2026 04:01 (5 hours ago)
+77.239.114.179:3128	HTTP (Squid)	NOA	US	77.239.114.179 (Intezio Worldwide Limited)	25.014	
+35% (11) -	26-may-2026 03:52 (5 hours ago)
+149.248.37.215:9000	HTTP	ANM	US Kent (Washington)	149.248.37.215.vultrusercontent.com (The Constant Company, LLC)	4.66	
+33% (6) -	26-may-2026 03:46 (5 hours ago)
+98.175.31.195:4145	SOCKS5	HIA	US Norfolk (Virginia)	wsip-98-175-31-195.hr.hr.cox.net (Cox Communications Inc.)	1.126	
+91% (2636) -	26-may-2026 03:38 (5 hours ago)
+191.44.125.35:8080	HTTP (Mikrotik)	NOA	US	191.44.125.35	1.615	
+31% (8) -	26-may-2026 03:35 (5 hours ago)
+204.48.25.235:3128	HTTP (Squid)	NOA	US North Bergen (New Jersey)	204.48.25.235 (DigitalOcean, LLC)	14.771	
+50% (5) -	26-may-2026 03:34 (6 hours ago)
+45.77.148.203:9000	HTTP	ANM	US Piscataway (New Jersey)	45.77.148.203.vultrusercontent.com (The Constant Company, LLC)	20.077	
+44% (11) -	26-may-2026 03:27 (6 hours ago)
+103.48.69.170:83	HTTP (Mikrotik)	NOA	US !!!	103.48.69.170 (Country Online Services PVT LTD)	11.347	
+7% (7) -	26-may-2026 03:24 (6 hours ago)
+23.224.193.44:3128	HTTPS (Squid)	NOA	US !!!	23.224.193.44 (CNSERVERS LLC)	14.817	
+63% (15) -	26-may-2026 03:21 (6 hours ago)
+131.153.163.236:55726	HTTPS	HIA	US Ashburn (Virginia) !!!	131.153.163.236 (SECURED SERVERS LLC)	3.142	
+new +	26-may-2026 03:13 (6 hours ago)
+129.80.217.21:444	HTTPS (Squid)	NOA	US Ashburn (Virginia)	129.80.217.21 (Oracle Corporation)	15.865	
+48% (35) -	26-may-2026 02:38 (6 hours ago)
+174.138.165.180:51207	HTTP	HIA	US Phoenix (Arizona) !!!	174.138.165.180 (SECURED SERVERS LLC)	16.503	
+17% (1) -	26-may-2026 02:29 (7 hours ago)
+74.112.77.216:8080	HTTP (Squid)	NOA	US	74.112.77.216 (G-Core Labs S.A.)	14.056	
+50% (11) -	26-may-2026 01:09 (8 hours ago)
+67.20.129.199:8080	HTTP (Mikrotik)	NOA	US Okatie (South Carolina)	67-20-129-67-20-129-199.cpe.sparklight.net (Hargray Communications Group, Inc.)	8.564	
+36% (8) -	26-may-2026 01:06 (8 hours ago)
+52.226.88.199:3128	HTTP (Squid)	ANM	US Washington (Virginia) !!!	52.226.88.199 (Microsoft Corporation)	2.991	
+50% (10) +	26-may-2026 00:51 (8 hours ago)
+38.145.218.142:3128	HTTP	ANM	US Redondo Beach (California)	142.218-145-38.rdns.scalabledns.com (Enzu Inc)	13.88	
+24% (24) -	26-may-2026 00:43 (8 hours ago)
+40.90.200.185:3128	HTTPS (Squid)	NOA	US	40.90.200.185 (Microsoft Corporation)	18.025	
+50% (9) -	26-may-2026 00:29 (9 hours ago)
+*NOA - non anonymous proxy, ANM - anonymous proxy server, HIA - high anonymous proxy. **Latency - lower = better. ***Relative to another servers. HTTPS - HTTP proxy with SSL support.
