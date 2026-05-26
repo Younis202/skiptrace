@@ -232,7 +232,10 @@ async function searchViaForm(
   }
   // -- Below this point, we are on the results page --
 
-  // ── Step 2: Paginate through results looking for name match ───────────────
+  // ── Step 2: Paginate through ALL pages, collecting ALL matching hrefs ─────
+  const matchedHrefs: string[] = [];
+  let firstResultHref: string | null = null; // fallback if no name match found
+
   for (let pageNum = 1; pageNum <= MAX_PAGES; pageNum++) {
     logger.debug({ address, pageNum, firstName, lastName }, "Scanning results page");
 
@@ -240,87 +243,96 @@ async function searchViaForm(
     const hasResults = await page.$("a.btn-primary.btn-block, a.btn.btn-primary.btn-block");
     if (!hasResults) {
       logger.debug({ address }, "No results found on page");
-      return [];
+      break;
     }
 
-    // Get all VIEW DETAILS links with their title attributes for name matching
+    // Get ALL VIEW DETAILS links on this page
     const resultCards = await page.$$eval(
       "a.btn-primary.btn-block, a.btn.btn-primary.btn-block",
       (els) =>
         els.map((el) => ({
           href: el.getAttribute("href") || "",
           title: el.getAttribute("title") || "",
-          text: el.textContent?.trim() || "",
         }))
     );
 
-    // Find the best match
-    let matchedHref: string | null = null;
-
-    if (firstName || lastName) {
-      // Try exact name match first
-      const exactMatch = resultCards.find((c) =>
-        nameMatches(c.title, firstName, lastName)
-      );
-      if (exactMatch) {
-        matchedHref = exactMatch.href;
-        logger.debug({ matchedTitle: exactMatch.title, firstName, lastName }, "Name match found");
-      }
+    // Remember very first result across all pages as fallback
+    if (firstResultHref === null && resultCards.length > 0) {
+      firstResultHref = resultCards[0].href;
     }
 
-    // If no name given, or no name match found on this page, check next page first
-    if (!matchedHref) {
-      // Check if there's a next page
-      const nextLink = await page.$("a[aria-label='Next Page'], a[aria-label='Next page']");
-
-      if (nextLink && pageNum < MAX_PAGES) {
-        const nextHref = await nextLink.getAttribute("href");
-        if (nextHref) {
-          const nextUrl = nextHref.startsWith("http") ? nextHref : `${CYBER_BASE}${nextHref}`;
-          await page.goto(nextUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
-          await randomDelay(1500, 3000);
-
-          if (await isCloudflareBlocked(page)) {
-            const cleared = await waitForCloudflare(page, 20000);
-            if (!cleared) throw new Error("Cloudflare challenge on pagination");
-          }
-          continue; // try next page
+    // Collect ALL cards that match the name on this page
+    for (const card of resultCards) {
+      if (!card.href) continue;
+      if (firstName || lastName) {
+        if (nameMatches(card.title, firstName, lastName)) {
+          matchedHrefs.push(card.href);
+          logger.debug({ matchedTitle: card.title, firstName, lastName }, "Name match found");
         }
-      }
-
-      // No more pages — if we still haven't found a match, take the first result
-      if (resultCards.length > 0 && (!firstName && !lastName)) {
-        matchedHref = resultCards[0].href;
-        logger.debug({ href: matchedHref }, "No name to match — using first result");
       } else {
-        logger.debug({ address, firstName, lastName }, "Name not found in any results page");
-        return [];
+        // No name provided — collect all results
+        matchedHrefs.push(card.href);
       }
     }
 
-    if (!matchedHref) return [];
+    // Navigate to next page if available
+    const nextLink = await page.$("a[aria-label='Next Page'], a[aria-label='Next page']");
+    if (nextLink && pageNum < MAX_PAGES) {
+      const nextHref = await nextLink.getAttribute("href");
+      if (nextHref) {
+        const nextUrl = nextHref.startsWith("http") ? nextHref : `${CYBER_BASE}${nextHref}`;
+        await page.goto(nextUrl, { waitUntil: "networkidle", timeout: 35000 });
+        await randomDelay(1500, 3000);
+        if (await isCloudflareBlocked(page)) {
+          const cleared = await waitForCloudflare(page, 20000);
+          if (!cleared) throw new Error("Cloudflare challenge on pagination");
+        }
+        continue;
+      }
+    }
+    break; // no more pages
+  }
 
-    // ── Step 6: Navigate to the profile detail page ────────────────────────
-    const detailUrl = matchedHref.startsWith("http")
-      ? matchedHref
-      : `${CYBER_BASE}${matchedHref}`;
+  // ── Step 3: If no name matched, fall back to first result ─────────────────
+  const hrefs = matchedHrefs.length > 0
+    ? matchedHrefs
+    : firstResultHref
+      ? [firstResultHref]
+      : [];
 
+  if (hrefs.length === 0) {
+    logger.debug({ address, firstName, lastName }, "No results found at this address");
+    return [];
+  }
+
+  if (matchedHrefs.length === 0 && firstResultHref) {
+    logger.debug({ address }, "No name match — using first result as fallback");
+  }
+
+  // ── Step 4: Visit each matched profile, collect all phones ────────────────
+  const allPhones: string[] = [];
+
+  for (const href of hrefs) {
+    const detailUrl = href.startsWith("http") ? href : `${CYBER_BASE}${href}`;
     logger.debug({ detailUrl }, "Navigating to profile detail page");
-    await page.goto(detailUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
-    await randomDelay(1000, 2500);
+
+    await page.goto(detailUrl, { waitUntil: "networkidle", timeout: 35000 });
+    await randomDelay(800, 2000);
 
     if (await isCloudflareBlocked(page)) {
       const cleared = await waitForCloudflare(page, 20000);
       if (!cleared) throw new Error("Cloudflare challenge on detail page");
     }
 
-    // ── Step 7: Extract phones ─────────────────────────────────────────────
     const phones = await extractPhonesFromDetailPage(page);
     logger.debug({ detailUrl, phonesFound: phones.length }, "Phones extracted");
-    return phones;
+    allPhones.push(...phones);
+
+    // Small delay between profile visits
+    if (hrefs.length > 1) await randomDelay(2000, 4000);
   }
 
-  return [];
+  return [...new Set(allPhones)];
 }
 
 /** Detect if an error is caused by a dead/unreachable proxy */
