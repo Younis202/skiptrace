@@ -86,12 +86,11 @@ function nameMatches(resultTitle: string, firstName: string, lastName: string): 
   const fn = normalizeName(firstName);
   const ln = normalizeName(lastName);
 
-  // Both match → strong match
-  if (fn && ln && title.includes(fn) && title.includes(ln)) return true;
-  // Last name match only (at least 3 chars to avoid false positives)
-  if (ln.length >= 3 && title.includes(ln)) return true;
-  // First name + last name initial
-  if (fn && ln.length >= 1 && title.includes(fn) && title.includes(ln[0])) return true;
+  // First name is the primary criterion — if it matches, that's enough
+  if (fn.length >= 2 && title.includes(fn)) return true;
+
+  // No first name supplied → fall back to last name only
+  if (!fn && ln.length >= 3 && title.includes(ln)) return true;
 
   return false;
 }
