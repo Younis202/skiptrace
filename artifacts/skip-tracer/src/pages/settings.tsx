@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, ToggleLeft, ToggleRight, Zap, Plus, Upload, CheckCircle2, XCircle, AlertTriangle, Clock } from "lucide-react";
+import { Trash2, ToggleLeft, ToggleRight, Zap, Plus, Upload, AlertTriangle, Clock, RefreshCw } from "lucide-react";
 import {
   useListProxies,
   getListProxiesQueryKey,
@@ -15,6 +15,9 @@ import {
   useDeleteProxy,
   useToggleProxy,
   useTestProxy,
+  useGetProxyRefreshStatus,
+  getGetProxyRefreshStatusQueryKey,
+  useRefreshProxies,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -26,12 +29,19 @@ export default function Settings() {
   const { data, isLoading } = useListProxies();
   const proxies = data?.proxies ?? [];
 
+  const { data: refreshStatus } = useGetProxyRefreshStatus({
+    query: { refetchInterval: 10_000 },
+  });
+
   const [singleUrl, setSingleUrl] = useState("");
   const [singleLabel, setSingleLabel] = useState("");
   const [bulkText, setBulkText] = useState("");
   const [testingIds, setTestingIds] = useState<Set<string>>(new Set());
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: getListProxiesQueryKey() });
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: getListProxiesQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getGetProxyRefreshStatusQueryKey() });
+  };
 
   const addProxy = useAddProxy({
     mutation: {
@@ -84,6 +94,16 @@ export default function Settings() {
     },
   });
 
+  const doRefresh = useRefreshProxies({
+    mutation: {
+      onSuccess: (res) => {
+        invalidate();
+        toast({ title: `Refresh complete — ${res.added} new proxies added`, description: `${res.skipped} duplicates skipped` });
+      },
+      onError: () => toast({ title: "Refresh failed", variant: "destructive" }),
+    },
+  });
+
   const handleTest = (proxyId: string) => {
     setTestingIds(prev => new Set(prev).add(proxyId));
     testProxy.mutate({ proxyId });
@@ -121,6 +141,66 @@ export default function Settings() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Auto-Refresh Card */}
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <RefreshCw className="w-4 h-4 text-primary" /> Auto-Refresh Proxy Pool
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Automatically fetches fresh proxies from public lists (TheSpeedX, monosans) every 24 hours. Duplicates are skipped.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="space-y-1 text-xs font-mono text-muted-foreground">
+                {refreshStatus?.isRefreshing ? (
+                  <p className="flex items-center gap-1.5 text-primary">
+                    <RefreshCw className="w-3 h-3 animate-spin" /> Fetching proxies now...
+                  </p>
+                ) : refreshStatus?.lastRefreshedAt ? (
+                  <>
+                    <p>
+                      Last refresh:{" "}
+                      <span className="text-foreground">
+                        {new Date(refreshStatus.lastRefreshedAt).toLocaleString()}
+                      </span>
+                      {" "}
+                      <span className="text-emerald-500">(+{refreshStatus.lastAddedCount} added)</span>
+                    </p>
+                    {refreshStatus.nextRefreshAt && (
+                      <p>
+                        Next auto-refresh:{" "}
+                        <span className="text-foreground">
+                          {new Date(refreshStatus.nextRefreshAt).toLocaleString()}
+                        </span>
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p>
+                    <Clock className="w-3 h-3 inline mr-1" />
+                    Auto-refresh runs 5 min after startup, then every 24 hours.
+                    {refreshStatus?.nextRefreshAt && (
+                      <> Next: <span className="text-foreground">{new Date(refreshStatus.nextRefreshAt).toLocaleString()}</span></>
+                    )}
+                  </p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={doRefresh.isPending || refreshStatus?.isRefreshing}
+                onClick={() => doRefresh.mutate()}
+                className="shrink-0 border-primary/40 hover:border-primary"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${doRefresh.isPending ? "animate-spin" : ""}`} />
+                {doRefresh.isPending ? "Refreshing..." : "Refresh Now"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>

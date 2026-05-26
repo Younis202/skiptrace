@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { db, proxiesTable } from "@workspace/db";
 import { chromium } from "playwright";
+import { refreshProxies, getRefreshStatus } from "../lib/proxyRefresher";
 
 const router = Router();
 
@@ -29,6 +30,20 @@ function maskProxyPassword(url: string): string {
     return url;
   }
 }
+
+router.get("/proxies/refresh-status", (_req, res) => {
+  res.json(getRefreshStatus());
+});
+
+router.post("/proxies/refresh", async (req, res) => {
+  try {
+    const result = await refreshProxies();
+    res.json({ ...result, lastRefreshedAt: getRefreshStatus().lastRefreshedAt });
+  } catch (err) {
+    req.log.error({ err }, "Failed to refresh proxies");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get("/proxies", async (req, res) => {
   try {

@@ -33,6 +33,20 @@ export interface AddProxyInput {
   label?: string;
 }
 
+export interface ProxyRefreshStatus {
+  lastRefreshedAt?: string;
+  nextRefreshAt?: string;
+  lastAddedCount: number;
+  isRefreshing: boolean;
+}
+
+export interface RefreshProxiesResult {
+  added: number;
+  skipped: number;
+  total: number;
+  lastRefreshedAt?: string;
+}
+
 export interface HealthStatus {
   status: string;
 }

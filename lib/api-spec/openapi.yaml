@@ -231,6 +231,38 @@ paths:
               schema:
                 $ref: "#/components/schemas/BulkProxyResult"
 
+  /proxies/refresh-status:
+    get:
+      operationId: getProxyRefreshStatus
+      tags: [proxies]
+      summary: Get the last proxy auto-refresh status
+      responses:
+        "200":
+          description: Refresh status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProxyRefreshStatus"
+
+  /proxies/refresh:
+    post:
+      operationId: refreshProxies
+      tags: [proxies]
+      summary: Fetch fresh proxies from public lists now
+      responses:
+        "200":
+          description: Refresh result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefreshProxiesResult"
+        "500":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /proxies/{proxyId}:
     delete:
       operationId: deleteProxy
@@ -373,6 +405,35 @@ components:
           type: string
       required:
         - url
+
+    ProxyRefreshStatus:
+      type: object
+      properties:
+        lastRefreshedAt:
+          type: string
+          format: date-time
+        nextRefreshAt:
+          type: string
+          format: date-time
+        lastAddedCount:
+          type: integer
+        isRefreshing:
+          type: boolean
+      required: [isRefreshing, lastAddedCount]
+
+    RefreshProxiesResult:
+      type: object
+      properties:
+        added:
+          type: integer
+        skipped:
+          type: integer
+        total:
+          type: integer
+        lastRefreshedAt:
+          type: string
+          format: date-time
+      required: [added, skipped, total]
 
     HealthStatus:
       type: object

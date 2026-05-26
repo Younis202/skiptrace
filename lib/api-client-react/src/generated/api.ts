@@ -31,6 +31,8 @@ import type {
   ListJobs200,
   ListProxies200,
   Proxy,
+  ProxyRefreshStatus,
+  RefreshProxiesResult,
   TestProxy200,
   UploadSkipTraceListParams
 } from './api.schemas';
@@ -721,6 +723,153 @@ export const useAddProxiesBulk = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getAddProxiesBulkMutationOptions(options));
+    }
+
+export const getGetProxyRefreshStatusUrl = () => {
+
+
+
+
+  return `/api/proxies/refresh-status`
+}
+
+/**
+ * @summary Get the last proxy auto-refresh status
+ */
+export const getProxyRefreshStatus = async ( options?: RequestInit): Promise<ProxyRefreshStatus> => {
+
+  return customFetch<ProxyRefreshStatus>(getGetProxyRefreshStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetProxyRefreshStatusQueryKey = () => {
+    return [
+    `/api/proxies/refresh-status`
+    ] as const;
+    }
+
+
+export const getGetProxyRefreshStatusQueryOptions = <TData = Awaited<ReturnType<typeof getProxyRefreshStatus>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProxyRefreshStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProxyRefreshStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProxyRefreshStatus>>> = ({ signal }) => getProxyRefreshStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProxyRefreshStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetProxyRefreshStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getProxyRefreshStatus>>>
+export type GetProxyRefreshStatusQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get the last proxy auto-refresh status
+ */
+
+export function useGetProxyRefreshStatus<TData = Awaited<ReturnType<typeof getProxyRefreshStatus>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProxyRefreshStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetProxyRefreshStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getRefreshProxiesUrl = () => {
+
+
+
+
+  return `/api/proxies/refresh`
+}
+
+/**
+ * @summary Fetch fresh proxies from public lists now
+ */
+export const refreshProxies = async ( options?: RequestInit): Promise<RefreshProxiesResult> => {
+
+  return customFetch<RefreshProxiesResult>(getRefreshProxiesUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getRefreshProxiesMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof refreshProxies>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof refreshProxies>>, TError,void, TContext> => {
+
+const mutationKey = ['refreshProxies'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof refreshProxies>>, void> = () => {
+
+
+          return  refreshProxies(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RefreshProxiesMutationResult = NonNullable<Awaited<ReturnType<typeof refreshProxies>>>
+
+    export type RefreshProxiesMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Fetch fresh proxies from public lists now
+ */
+export const useRefreshProxies = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof refreshProxies>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof refreshProxies>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getRefreshProxiesMutationOptions(options));
     }
 
 export const getDeleteProxyUrl = (proxyId: string,) => {

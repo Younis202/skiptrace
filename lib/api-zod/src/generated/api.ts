@@ -164,6 +164,28 @@ export const AddProxiesBulkResponse = zod.object({
 
 
 /**
+ * @summary Get the last proxy auto-refresh status
+ */
+export const GetProxyRefreshStatusResponse = zod.object({
+  "lastRefreshedAt": zod.coerce.date().optional(),
+  "nextRefreshAt": zod.coerce.date().optional(),
+  "lastAddedCount": zod.number(),
+  "isRefreshing": zod.boolean()
+})
+
+
+/**
+ * @summary Fetch fresh proxies from public lists now
+ */
+export const RefreshProxiesResponse = zod.object({
+  "added": zod.number(),
+  "skipped": zod.number(),
+  "total": zod.number(),
+  "lastRefreshedAt": zod.coerce.date().optional()
+})
+
+
+/**
  * @summary Delete a proxy
  */
 export const DeleteProxyParams = zod.object({

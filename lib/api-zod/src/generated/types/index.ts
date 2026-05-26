@@ -21,6 +21,8 @@ export * from './jobStatus';
 export * from './listJobs200';
 export * from './listProxies200';
 export * from './proxy';
+export * from './proxyRefreshStatus';
+export * from './refreshProxiesResult';
 export * from './skipTraceResult';
 export * from './skipTraceResultStatus';
 export * from './testProxy200';
