@@ -246,14 +246,36 @@ async function searchViaForm(
       break;
     }
 
-    // Get ALL VIEW DETAILS links on this page
+    // Get ALL VIEW DETAILS links on this page, extracting the person name from
+    // the surrounding card — title attr, card heading, or aria-label
     const resultCards = await page.$$eval(
       "a.btn-primary.btn-block, a.btn.btn-primary.btn-block",
       (els) =>
-        els.map((el) => ({
-          href: el.getAttribute("href") || "",
-          title: el.getAttribute("title") || "",
-        }))
+        els.map((el) => {
+          // Walk up to find the enclosing card/item container
+          const card =
+            el.closest("li, article, .result-item, .record-item, .card, [class*='result'], [class*='record']") ||
+            el.parentElement?.parentElement ||
+            el.parentElement;
+
+          // Try multiple places where the person's name might live
+          const headingEl =
+            card?.querySelector("h1, h2, h3, h4, h5, [class*='name'], [class*='title']") ||
+            card?.querySelector("a[href*='/people/']");
+
+          const nameFromHeading = headingEl?.textContent?.trim() || "";
+          const nameFromTitle = el.getAttribute("title") || "";
+          const nameFromAria = el.getAttribute("aria-label") || "";
+          // Also try the href itself — often contains the slug like /people/elaine-o-viguerie/...
+          const hrefSlug = (el.getAttribute("href") || "").replace(/.*\/people\//, "").replace(/\/.*$/, "").replace(/-\d+$/, "").replace(/-/g, " ");
+
+          const name = nameFromHeading || nameFromTitle || nameFromAria || hrefSlug;
+
+          return {
+            href: el.getAttribute("href") || "",
+            title: name,
+          };
+        })
     );
 
     // Remember very first result across all pages as fallback
