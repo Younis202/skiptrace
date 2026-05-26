@@ -106,14 +106,17 @@ function normalizeName(s: string): string {
 
 function nameMatches(resultTitle: string, firstName: string, lastName: string): boolean {
   const title = normalizeName(resultTitle);
-  const fn = normalizeName(firstName);
-  const ln = normalizeName(lastName);
 
-  // First name is the primary criterion — if it matches, that's enough
-  if (fn.length >= 2 && title.includes(fn)) return true;
+  // Use ONLY the first word of firstName — handles "John C. Smith" vs "John Smith"
+  // and also handles cases where firstName contains the full name e.g. "John Smith"
+  const firstWord = normalizeName(firstName).split(/\s+/)[0] || "";
+  const lastWord = normalizeName(lastName).split(/\s+/)[0] || "";
 
-  // No first name supplied → fall back to last name only
-  if (!fn && ln.length >= 3 && title.includes(ln)) return true;
+  // Primary: match by first name only (even a single char is useful for rare names)
+  if (firstWord.length >= 2 && title.includes(firstWord)) return true;
+
+  // Fallback: no first name supplied → use last name only
+  if (!firstWord && lastWord.length >= 3 && title.includes(lastWord)) return true;
 
   return false;
 }
