@@ -1,0 +1,70 @@
+ياصاحبي ايه العبط دا انا كل اللي انا عاوزه الكود يفتح يختار يعمل search بالعنوان واعمل الملف بتاع ال leads اسم وعنوان بس هيبقي في خانتين خانه ال https://www.cyberbackgroundchecks.com/address
+
+وفي inpput جا يسطا يحط العنوان الشارع :
+
+<input class="form-control" id="SearchCriteriaViewModel_AddressLine1" name="SearchCriteriaViewModel.AddressLine1" placeholder="Street Address, Apt/Unit" type="text" value="">
+
+وفي ال input دا يحط المدية والولاية  :
+
+<input type="text" id="SearchByAddress_AddressLine2" class="form-control address-input" placeholder="City &amp; State" autocomplete="off" value="">
+
+الموضع سهل سهولة اهو زي مانت شايف:
+
+وبعدها يدوس علي الزرار دا اللي هو بتاع البحث :
+
+<button type="submit" class="btn btn-warning text-white btn-block" id="button-search-by-address" aria-label="Search by address"><strong><i class="fas fa-search"></i></strong></button>
+
+بدها هيظهر كذا نتيجه لانه مش بيظهر نتيجه واحده زي مانت عارف ف الكود بتاعنا هيعمل scroll مثلا او يدور ف النتايج اللي هتطلع للاكتر حاجه مشابهه وهنا ياجي دور الاسم اللي معانا يطابق الاسم بتاع الlead اللي بيددور عليها فاهم؟ يشوف لو نفس الاسم يبقي هو دا يقوم او اسهل لو يعرف مثلا يسرش اللي هو لما انا دوس مثلا ctrl + f مثلا واكتب اللي عاوز اسرش عليه ف لو الاسم موجود تمام يخش علي الملف بتاعه اللي هو view detials :
+<a title="View full address history, phone history, emails, relatives, associates, businesses and more for Christopher R Mcmanus in Katy, TX 77449 4701" class="btn btn-primary btn-block" href="/detail/christopher-r-mcmanus/pidzxqylypbammgxxqyqbx">
+                    <i class="fas fa-eye mr-1 mb-1"></i>
+                    VIEW DETAILS
+                </a>
+اللينك اللي زي دا اللي هيبقي بتاعه مثلا 
+
+يخش يجيب ارقام التليفونات بتاعته اللي موجوده سواء رقم اكتر من رقم ظبط الدنيا :
+<div class="row" bis_skin_checked="1">
+                            <div class="col-md-12 text-secondary" bis_skin_checked="1">
+                                <hr>
+                                <h2 class="section-label"><i class="fad fa-mobile-alt text-warning mr-1 mb-1"></i><span class="phones-label section-label">Phone Numbers</span></h2>
+
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 463-7629 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-463-7629">(281) 463-7629</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in August of 2010</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 579-2322 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-579-2322">(281) 579-2322</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in February of 2009</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (281) 345-7254 (LandLine/Services - Southwestern Bell Telephone Company)" href="/phone/281-345-7254">(281) 345-7254</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Southwestern Bell Telephone Company</span>
+                                            <small><span class="d-block last-reported">Last reported in October of 2020</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (404) 327-9874 (LandLine/Services - Bellsouth Telecommunications Inc dba Southern Bell Telephone &amp; Telegraph)" href="/phone/404-327-9874">(404) 327-9874</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">LandLine/Services</span>
+                                            <span class="d-block carrier">Bellsouth Telecommunications Inc dba Southern Bell Telephone &amp; Telegraph</span>
+                                            <small><span class="d-block last-reported">Last reported in June of 2017</span></small>
+                                        </p>
+                                        <h3 class="mb-0"><a class="phone" title="Find other people associated with (832) 788-0627 (Wireless - New Cingular Wireless PCS LLC - GA)" href="/phone/832-788-0627">(832) 788-0627</a></h3>
+                                        <p>
+                                            <span class="d-block phone-type">Wireless</span>
+                                            <span class="d-block carrier">New Cingular Wireless PCS LLC - GA</span>
+                                            <small><span class="d-block last-reported">Last reported in June of 2014</span></small>
+                                        </p>
+
+                            </div>
+                        </div>
+
+لو ملقيش الاسم المناسب اللي بندور عليه يروح للصفحه اللي بعد كده :
+
+<a class="page-link text-warning" data-toggle="tooltip" data-placement="bottom" title="" aria-label="Next Page" href="/address/5911-rye-creek-dr/katy/tx/2" data-original-title="Next page"><i class="fas fa-chevron-right text-warning"></i></a>
+
+وبس يسرش علي الاسم لو لقيه تطابق وتمام انت اكيد فاهمني يخش علي ال details يجيب ارقم التليفون وهكذا 
+
+بص انا عارف ان اللي انا باعتهلك دا عك كبييير جدا جدا بس انت بقي ايه ظبط الدنيا كداه وافهم المطلوب وانت اكيد اعم وفاهم الدنيا دانت اقوي المبرمجحين ظبط الدنيا عاوزين اقوي واحسن skip tracer يامعلم
